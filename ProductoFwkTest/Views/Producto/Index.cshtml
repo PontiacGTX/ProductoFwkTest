@@ -72,7 +72,9 @@
     <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
     <script src="~/js/customerDatatable.js"></script>
     <script>
+       
         $(document).ready(function () {
+            alert("Test Crud Desarrollado por https://github.com/PontiacGTX")
             $('#productDatatable').dataTable({
 
                 "processing": true,
@@ -83,7 +85,6 @@
                     "type": "POST",
                     "datatype": "json",
                     "dataSrc": function (json) {
-                        //Make your callback here.
                         console.log(json)
                         return json;
                     }
@@ -112,7 +113,7 @@
 
         function DeleteProduct(id)
         {
-
+            
             let uri = `/api/Data/${id}`;
             let placeHolder = {};
             $.ajax({
@@ -122,7 +123,7 @@
                 data: placeHolder,
                 success: function (result) {
 
-                    console.log(result);
+                    alert("Test Crud Desarrollado por https://github.com/PontiacGTX")
                     window.location.href = '@Url.Action("Index","Producto")';
                 },
                 error: function () {
