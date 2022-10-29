@@ -1,0 +1,26 @@
+﻿create database ProductoFwkDb;
+
+
+create table ProductoCat
+(
+ProductoCatId int NOT NULL Identity(1,1)PRIMARY KEY,
+Valor varchar(max) NOT NULL,
+)
+
+USE ProductoFwkDb;
+INSERT INTO ProductoCat(Valor) VALUES ('Informatica'),('Oficina'),('Otros')
+
+USE ProductoFwkDb;
+create table Producto
+(
+ProductoId int NOT NULL Identity(1,1) PRIMARY KEY,
+Valor varchar(max) NOT NULL,
+Precio float NOT NULL,
+Activo bit NOT NULL default 1,
+ProductoCatId int ,
+Cantidad int NOT NULL,
+FOREIGN KEY (ProductoCatId) references ProductoCat(ProductoCatId)
+);
+
+
+INSERT INTO Producto(Valor,Precio,Activo,ProductoCatId,Cantidad) VALUES ('PC2',229.0,1,1,900)

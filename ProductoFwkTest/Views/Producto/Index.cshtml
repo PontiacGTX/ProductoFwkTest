@@ -1,0 +1,135 @@
+﻿@model IList<ProductoFwkTest.Entities.Producto>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<link href="~/lib/datatables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table id="productDatatable" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+    <thead>
+        <tr>
+            <td>
+                ProductoId
+            </td>
+            <th>
+                Valor
+            </th>
+            <th>
+                Activo
+            </th>
+            <th>
+                Precio
+            </th>
+            <th>
+                ProductoCatId
+            </th>
+            <th>
+                Cantidad
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in @Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductoId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Valor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Activo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Precio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductoCatId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.ProductoId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.ProductoId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.ProductoId })
+            </td>
+        </tr>
+        }
+    </tbody>
+
+</table>
+
+@section Scripts
+{
+    <script src="~/lib/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/datatables/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/js/customerDatatable.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#productDatatable').dataTable({
+
+                "processing": true,
+                "serverSide": true,
+                "filter": true,
+                "ajax": {
+                    "url": "/api/Data",
+                    "type": "POST",
+                    "datatype": "json",
+                    "dataSrc": function (json) {
+                        //Make your callback here.
+                        console.log(json)
+                        return json;
+                    }
+                },
+                "columnDefs": [{
+                    "targets": [0],
+                    "visible": false,
+                    "searchable": false
+                }],
+                "columns": [
+                    { "data": "ProductoId", "name": "productoId", "autoWidth": true },
+                    { "data": "Valor", "name": "valor", "autoWidth": true },
+                    { "data": "Activo", "name": "activo", "autoWidth": true },
+                    { "data": "Precio", "name": "precio", "autoWidth": true },
+                    { "data": "ProductoCatId", "name": "productoCatId", "autoWidth": true },
+                    { "data": "Cantidad", "name": "cantidad", "autoWidth": true },
+                    {
+
+                        "render": function (data, type, row, meta) { return "<a href='#' class='btn btn-danger' onclick=DeleteProduct('" + row.ProductoId + "'); >" + "  Delete</a>" + `<a class='btn btn-primary' href='/Producto/Details/${row.ProductoId}'>Details</a>` +  `<a class='btn btn-success' href='/Producto/Edit/${row.ProductoId}'>Edit</a>`; },
+                        
+                    },
+                ]
+            });
+
+        });
+
+        function DeleteProduct(id)
+        {
+
+            let uri = `/api/Data/${id}`;
+            let placeHolder = {};
+            $.ajax({
+                type: 'Delete',
+                url: uri,
+                //contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // when we use .serialize() this generates the data in query string format. this needs the default contentType (default content type is: contentType: 'application/x-www-form-urlencoded; charset=UTF-8') so it is optional, you can remove it
+                data: placeHolder,
+                success: function (result) {
+
+                    console.log(result);
+                    window.location.href = '@Url.Action("Index","Producto")';
+                },
+                error: function () {
+                    console.log('Failed ');
+                }
+            })
+        }
+    </script>
+}
+
